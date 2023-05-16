@@ -1,6 +1,6 @@
 import { ErrorText } from './FormError.styled';
 import { ErrorMessage } from 'formik';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 
 
 export const FormError = ({ name }) => {
@@ -12,6 +12,6 @@ export const FormError = ({ name }) => {
   )
 };
 
-FormError.propTypes = {
-  name: PropTypes.string.isRequired,
-};
+// FormError.propTypes = {
+//   name: PropTypes.string.isRequired,
+// };

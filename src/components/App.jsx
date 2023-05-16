@@ -1,94 +1,85 @@
-import React, { Component } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { nanoid } from 'nanoid';
 import { Container } from './Container/Container';
 import { FormContacts } from './Form/Form';
 import { ContactsList } from './ContactsList/ContactsList';
 import { Filter } from './Filter/Filter';
 
-const KEY = "contacts";
-export class App extends Component {
-  state = {
-    contacts: [],
-    filter: '',
-  };
-  componentDidMount() {
-    const contacts = localStorage.getItem(KEY);
-    const parseContacts = JSON.parse(contacts)
+const KEY = 'contacts';
+
+export function App() {
+  const [contacts, setContacts] = useState([]);
+  const [filter, setFilter] = useState('');
+  const isFirstRender = useRef(true);
+
+  useEffect(() => {
+    const contactsFromLocalStorage = localStorage.getItem(KEY);
+    const parseContacts = JSON.parse(contactsFromLocalStorage);
 
     if (parseContacts) {
-  this.setState({contacts: parseContacts})
-}
-    
-  }
-  
-  componentDidUpdate(prevProps, prevState) {
-    const { contacts } = this.state;
-   
-    if (contacts !== prevState.contacts) {
-      localStorage.setItem(KEY, JSON.stringify(contacts))
+      setContacts(parseContacts);
     }
-  }
+  }, []);
 
-  
-  addContact = (name, number) => {
-    let checkName = this.state.contacts.some(item => item.name.toLowerCase() === name.toLowerCase())
-    let checkNumber = this.state.contacts.some(item => {
-      let stateNumber = parseInt(item.number.replace(/[^\d]/g, ""));
-      let newNumber = parseInt(number.replace(/[^\d]/g, ""));
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    localStorage.setItem(KEY, JSON.stringify(contacts));
+  }, [contacts]);
+
+  function addContact(name, number) {
+    let checkName = contacts.some(
+      item => item.name.toLowerCase() === name.toLowerCase()
+    );
+    let checkNumber = contacts.some(item => {
+      let stateNumber = parseInt(item.number.replace(/[^\d]/g, ''));
+      let newNumber = parseInt(number.replace(/[^\d]/g, ''));
       return stateNumber === newNumber;
-    })
-    
-    if (checkName)
-      return window.alert(`${name} is already in contacts`);
-    if (checkNumber)
-      return window.alert(`${number} is already in contacts`);
-    
+    });
+
+    if (checkName) return window.alert(`${name} is already in contacts`);
+    if (checkNumber) return window.alert(`${number} is already in contacts`);
+
     const contact = {
       id: nanoid(),
       name,
       number,
     };
+    setContacts(prevContacts => [...prevContacts, contact]);
+  }
 
-    this.setState(({ contacts }) => ({
-      contacts: [...contacts, contact],
-    }));
+  const deleteContact = contactId => {
+    setContacts(prevContacts =>
+      prevContacts.filter(contact => contact.id !== contactId)
+    );
   };
 
-  deleteContact = contactId => {
-    this.setState(prevState => ({
-      contacts: prevState.contacts.filter(contact => contact.id !== contactId),
-    }));
+  const changeFilter = e => {
+    setFilter(e.currentTarget.value);
   };
 
-  changeFilter = e => {
-    this.setState({ filter: e.currentTarget.value });
-  };
-
-  getVisibleContacts = () => {
-    const { contacts, filter } = this.state;
+  const getVisibleContacts = () => {
     const normalizedFilter = filter.toLowerCase();
     return contacts.filter(contact =>
       contact.name.toLowerCase().includes(normalizedFilter)
     );
   };
 
-  render() {
-    // console.log("componentDidMount");
-    const { filter } = this.state;
-    const visibleContacts = this.getVisibleContacts();
-    return (
-      <Container>
-        <h1>Phonebook</h1>
-        <FormContacts onSubmit={this.addContact} />
+  const visibleContacts = getVisibleContacts();
+  return (
+    <Container>
+      <h1>Phonebook</h1>
+      <FormContacts onSubmit={addContact} />
 
-        <h2>Contacts</h2>
+      <h2>Contacts</h2>
 
-        <Filter onChange={this.changeFilter} value={filter} />
-        <ContactsList
-          contacts={visibleContacts}
-          onClickButtonDelete={this.deleteContact}
-        />
-      </Container>
-    );
-  }
+      <Filter onChange={changeFilter} value={filter} />
+      <ContactsList
+        contacts={visibleContacts}
+        onClickButtonDelete={deleteContact}
+      />
+    </Container>
+  );
 }

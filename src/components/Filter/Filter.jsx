@@ -1,5 +1,5 @@
 import { nanoid } from 'nanoid';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import { Label, LabelText, Input } from './Filter.styled';
 
 export const Filter = ({ value, onChange }) => {
@@ -12,7 +12,7 @@ export const Filter = ({ value, onChange }) => {
   );
 };
 
-Filter.propTypes = {
-  value: PropTypes.string.isRequired,
-  onChange: PropTypes.func.isRequired,
-};
+// Filter.propTypes = {
+//   value: PropTypes.string.isRequired,
+//   onChange: PropTypes.func.isRequired,
+// };

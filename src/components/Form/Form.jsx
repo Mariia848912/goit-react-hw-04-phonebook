@@ -1,6 +1,6 @@
 import { Formik } from 'formik';
 import { nanoid } from 'nanoid';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import {
   FormPhonebook,
   Input,
@@ -53,6 +53,6 @@ export const FormContacts = props => {
   );
 };
 
-FormContacts.propTypes = {
-  onSubmit: PropTypes.func.isRequired,
-};
+// FormContacts.propTypes = {
+//   onSubmit: PropTypes.func.isRequired,
+// };
