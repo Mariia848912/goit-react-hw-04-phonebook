@@ -8,18 +8,9 @@ import { Filter } from './Filter/Filter';
 const KEY = 'contacts';
 
 export function App() {
-  const [contacts, setContacts] = useState([]);
+  const [contacts, setContacts] = useState(() => JSON.parse(localStorage.getItem(KEY)) ?? []);
   const [filter, setFilter] = useState('');
   const isFirstRender = useRef(true);
-
-  useEffect(() => {
-    const contactsFromLocalStorage = localStorage.getItem(KEY);
-    const parseContacts = JSON.parse(contactsFromLocalStorage);
-
-    if (parseContacts) {
-      setContacts(parseContacts);
-    }
-  }, []);
 
   useEffect(() => {
     if (isFirstRender.current) {
