@@ -17,12 +17,12 @@ const initialValues = {
   number: '',
 };
 
-export const FormContacts = props => {
+export const FormContacts = ({onSubmit}) => {
   const nameInputId = nanoid();
   const numberInputId = nanoid();
 
   const handleSubmit = (value, actions) => {
-    props.onSubmit(value.name, value.number);
+    onSubmit(value.name, value.number);
     actions.resetForm();
   };
 
