@@ -18,7 +18,7 @@ export const ContactsList = ({ contacts, onClickButtonDelete }) => {
     </List>
   );
 };
-
+// ksfkkfkd
 ContactsList.propTypes = {
   onClickButtonDelete: PropTypes.func.isRequired,
   contacts: PropTypes.arrayOf(
